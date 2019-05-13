@@ -1,10 +1,13 @@
 #' ==========================================================================
 #' validators used by wadeR package. 
-#'
-#' inspector_loader(package = 'wadeR')
+#' require(wadeR)
+#' require(DataEntry.validation)
+#' 
 #' 
 #' x = wadeR::idbq('select * from RESIGHTINGS ')
 #' class(x) = c(class(x), 'RESIGHTINGS')
+#' 
+#' inspector_loader(package = 'wadeR')
 #' 
 #' ii = inspector(x)
 #' evalidators(ii)
@@ -118,8 +121,7 @@ inspector.CAPTURES <- function(x, ...){
   }
 
 
-inspector.RESIGHTINGS <- function(x, ...){
-  list(
+inspector.RESIGHTINGS <- function(x, ...){list(
 
   # GENERAL #################################   
     x[, .(author, gps_id, gps_point)] %>% 
@@ -202,9 +204,7 @@ inspector.RESIGHTINGS <- function(x, ...){
     "Other individuals more than 25 m away? - Individuals really together?" )
 
 
-  )
-
-  }
+  )}
 
 
 inspector.NESTS <- function(x, ...){
