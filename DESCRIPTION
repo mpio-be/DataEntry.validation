@@ -1,0 +1,27 @@
+Package: DataEntry.validation
+Type: Package
+Title: Tools to ensure the accuracy and reliability of the data.
+Description: Do datasets follow a set of well defined properties?.
+            Similar to database constraints but more flexible  and more accurate in reporting
+            where issues are.
+Version: 0.1.0
+Date: 2019-05-10
+Authors@R: person("Mihai", "Valcu", role=c("aut", "cre"), email="valcu@orn.mpg.de")
+Author: Mihai Valcu [aut, cre]
+Maintainer: Mihai Valcu <valcu@orn.mpg.de>
+URL: https://github.com/valcu/DataEntry.validation
+BugReports: https://github.com/valcu/DataEntry.validation/issues
+License: MIT 
+Depends:
+    R (>= 3.0.0)
+Imports:
+    data.table,
+    glue,
+    stringr,
+    magrittr
+Suggests:
+    covr,
+    testthat
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
