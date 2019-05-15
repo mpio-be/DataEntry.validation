@@ -59,7 +59,8 @@ inspector.CAPTURES <- function(x, ...){
     x[, .( UL, LL, UR, LR, recapture)] %>% 
     combo_validator(validSet  = 
         c(idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM CAPTURES' )$combo,
-          idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2017_REPHatBARROW.CAPTURES' )$combo
+          idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2017_REPHatBARROW.CAPTURES' )$combo,
+          idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2018_REPHatBARROW.CAPTURES' )$combo
           ), "Color Combo already in use (in CAPTURES)! Recapture?"),
 
     x[, .( UL, LL, UR, LR, recapture = 1)]  %>%  
@@ -153,8 +154,9 @@ inspector.RESIGHTINGS <- function(x, ...){list(
 
     x[, .( UL, LL, UR, LR, recapture = 1)] %>% 
     combo_validator( validSet  = c(idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM CAPTURES' )$combo,
-              idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2017_REPHatBARROW.CAPTURES' )$combo),
-               "Color combo does not exist in CAPTURES" ), 
+              idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2017_REPHatBARROW.CAPTURES' )$combo,
+              idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2018_REPHatBARROW.CAPTURES' )$combo
+              ), "Color combo does not exist in CAPTURES" ), 
 
   # SPECIES SPECIFIC: REPH ##################  
 
@@ -299,8 +301,9 @@ inspector.NESTS <- function(x, ...){
     x[!is.na(male_id) && nest2species(nest)== 'REPH', .(male_id)]  %>% 
     is.element_validator(  v = data.table(variable = "male_id",   
       set = list(  c(str_sub(idbq("SELECT ID FROM CAPTURES")$ID, -5), 
-        idbq("SELECT ID FROM FIELD_2017_REPHatBARROW.CAPTURES")$ID)  ) ), 
-        "Metal ID not in in CAPTURES!" ), 
+        idbq("SELECT ID FROM FIELD_2017_REPHatBARROW.CAPTURES")$ID,
+        idbq("SELECT ID FROM FIELD_2018_REPHatBARROW.CAPTURES")$ID
+        )  ) ), "Metal ID not in in CAPTURES!" ), 
 
     x[!is.na(female_id) && nest2species(nest)== 'REPH', .(female_id)] %>% 
     is.element_validator( v = data.table(variable = "female_id", 
