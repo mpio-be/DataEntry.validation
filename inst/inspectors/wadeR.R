@@ -229,9 +229,6 @@ inspector.NESTS <- function(x, ...){
     time_order_validator( time1 = 'time_appr', time2 = 'time_left', time_max = 60), 
 
 
-    x[nest_state == "F" | nest_state == "C", .(clutch_size)]  %>% 
-    is.na_validator("Clutch size is missing?")  , 
-  
     x[ , .(author)] %>% 
     is.element_validator(v = data.table(variable = "author", 
     set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  ))  ,
@@ -240,6 +237,9 @@ inspector.NESTS <- function(x, ...){
     is.element_validator(v = data.table(variable = "nest_state",    
     set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  ))  , 
 
+    x[nest_state == "F" | nest_state == "C", .(clutch_size)]  %>% 
+    is.na_validator("Clutch size is missing?")  , 
+  
     x[nest_state == "F", .(nest)] %>% 
     is.duplicate_validator(v = data.table(variable = "nest", 
       set = list(idbq("SELECT nest FROM NESTS")$nest  ) ), 
@@ -326,27 +326,23 @@ inspector.NESTS <- function(x, ...){
   }
 
 
-inspector.EGGS_CHICKS <- function(x, ...){
+inspector.EGGS_CHICKS_field <- function(x, ...){
   list(
-  x[, .(nest, egg_id, arrival_datetime, egg_weight, photo_id, float_angle)] %>% 
+  x[, .(nest, arrival_datetime, float_height, float_angle)] %>% 
   is.na_validator,
 
   x[ , .(arrival_datetime)] %>% 
   POSIXct_validator,
-
-  x[, .(egg_id)] %>% 
-  interval_validator(v = data.table(variable = "egg_id", lq = 1, uq = 4),   "More than 4 eggs?" ),
-
-  x[, .(egg_weight)] %>% 
-  interval_validator(v = data.table(variable = "egg_weight",  lq = 6.5, uq = 9.5),  "Weight out of typical range?" ),
 
   x[, .(float_angle)] %>% 
   interval_validator(v = data.table(variable = "float_angle", lq = 21, uq = 89),  "Angle has to be between 21 and 89 for the formula" ),
 
   x[, .(nest)] %>% 
   is.element_validator(v = data.table(variable = "nest", set = list(idbq("SELECT * FROM NESTS")$nest  ) ), "Nest does not exists in NESTS!" )
-  )
+  
 
+
+  )
   }
 
 
