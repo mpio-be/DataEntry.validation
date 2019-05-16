@@ -4,8 +4,8 @@
 #' require(DataEntry.validation)
 #' 
 #' 
-#' x = wadeR::idbq('select * from RESIGHTINGS ')
-#' class(x) = c(class(x), 'RESIGHTINGS')
+#' x = wadeR::idbq('select * from NESTS ')
+#' class(x) = c(class(x), 'NESTS')
 #' 
 #' inspector_loader(package = 'wadeR')
 #' 
@@ -230,15 +230,28 @@ inspector.NESTS <- function(x, ...){
 
 
     x[nest_state == "F" | nest_state == "C", .(clutch_size)]  %>% 
-    is.na_validator("Clutch size is missing?"), 
+    is.na_validator("Clutch size is missing?")  , 
   
     x[ , .(author)] %>% 
     is.element_validator(v = data.table(variable = "author", 
-    set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  )),
+    set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  ))  ,
 
     x[ , .(nest_state)] %>% 
     is.element_validator(v = data.table(variable = "nest_state",    
-    set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  )), 
+    set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  ))  , 
+
+    x[nest_state == "F", .(nest)] %>% 
+    is.duplicate_validator(v = data.table(variable = "nest", 
+      set = list(idbq("SELECT nest FROM NESTS")$nest  ) ), 
+    "Nest is already assigned! Nest number given twice or nest_state is not F?" )  , 
+  
+    x[nest_state != "F", .(nest)] %>% 
+    is.element_validator(v = data.table(variable = "nest", 
+    set = list( 
+        c( idbq("SELECT nest FROM NESTS WHERE nest_state = 'F' ")$nest, x[nest_state == "F"]$nest )
+        )  , 
+    "Nest does not exist in NESTS as found!" ) )  , 
+  
 
     x[ , .(m_behav)] %>% 
     is.element_validator( v = data.table(variable = "m_behav",
@@ -256,16 +269,6 @@ inspector.NESTS <- function(x, ...){
     interval_validator(  v = data.table(variable = "clutch_size", lq = 0, uq = 4 ),  
     "No eggs or more than 4?" ), 
 
-
-    x[nest_state == "F", .(nest)] %>% 
-    is.duplicate_validator(v = data.table(variable = "nest", 
-      set = list(idbq("SELECT nest FROM NESTS")$nest  ) ), 
-    "Nest is already assigned! Nest number given twice or nest_state is not F?" ), 
-
-    x[nest_state != "F", .(nest)] %>% 
-    is.element_validator(v = data.table(variable = "nest", 
-    set = list( idbq("SELECT nest FROM NESTS")$nest )  , "Nest does not exist in NESTS as found!" ) ), 
-    
 
     x[, .(nest)]  %>% 
     is.element_validator(  v = data.table(variable = "nest", 
