@@ -34,6 +34,7 @@ is.na_validator <- function(x, reason = 'mandatory') {
 #' @examples
 #' #----------------------------------------------------#
 #' t = Sys.time(); d = Sys.Date()
+#' require(data.table)
 #' x = data.table(
 #'  v1 = c(NA, as.character(d-1), as.character(t - 3600*24*10 )  ) ,
 #'  v2 = c('2016-11-23 25:23', as.character(t -100) ,as.character(t+100)))

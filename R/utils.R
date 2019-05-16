@@ -17,6 +17,7 @@ meltall <- function(x, na.rm = TRUE) {
 #' @param x  strip datetime or date
 #' @export
 #' @examples
+#' require(magrittr)
 #' x = c(Sys.Date() %>% as.character, Sys.time()%>% as.character )
 #' strp_date_or_time(x)
 

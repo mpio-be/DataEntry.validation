@@ -9,3 +9,5 @@
 ^.*\.log$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+DataEntry.validation.sublime-project
+DataEntry.validation.sublime-workspace

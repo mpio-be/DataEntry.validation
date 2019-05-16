@@ -86,6 +86,7 @@ x = data.table(v1 = c(1,2, NA, NA), v2  = c(1,2, NA, NA) )
 is.na_validator(x)
 #----------------------------------------------------#
 t = Sys.time(); d = Sys.Date()
+require(data.table)
 x = data.table(
  v1 = c(NA, as.character(d-1), as.character(t - 3600*24*10 )  ) ,
  v2 = c('2016-11-23 25:23', as.character(t -100) ,as.character(t+100)))

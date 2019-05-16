@@ -13,6 +13,7 @@ strp_date_or_time(x)
 strp datetime or time (Mysql compatible)
 }
 \examples{
+require(magrittr)
 x = c(Sys.Date() \%>\% as.character, Sys.time()\%>\% as.character )
 strp_date_or_time(x)
 }
