@@ -238,7 +238,7 @@ inspector.NESTS <- function(x, ...){
 
     x[ , .(nest_state)] %>% 
     is.element_validator(v = data.table(variable = "nest_state",    
-    set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H"))  )), 
+    set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  )), 
 
     x[ , .(m_behav)] %>% 
     is.element_validator( v = data.table(variable = "m_behav",
