@@ -59,7 +59,7 @@ inspector.CAPTURES <- function(x, ...){
           ), "Color Combo already in use (in CAPTURES)! Recapture?"),
 
     x[, .( UL, LL, UR, LR, recapture = 1)]  %>%  
-    combo_validator(validSet = colorCombos() ),
+    combo_validator(validSet = colorCombos() , 'Combo not within the valid set of combinations?'),
 
     x[, .(start_capture, caught_time)] %>% 
     time_order_validator(time1 = 'start_capture', time2 = 'caught_time', time_max = 60),
