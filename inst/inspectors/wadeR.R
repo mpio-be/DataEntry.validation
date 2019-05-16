@@ -21,9 +21,8 @@ inspector.CAPTURES <- function(x, ...){
 
   # GENERAL #################################  
     # Mandatory to enter
-    x[, .(date_, form_id, author, gps_id, gps_point, ID, recapture,capture_meth, weight, blood_dna)] %>% 
+    x[, .(date_, form_id, author, gps_id, gps_point, ID, recapture, capture_meth, weight, blood_dna)] %>% 
     is.na_validator,
-
 
     x[recapture == 0, .(tarsus, culmen, total_head, wing)]  %>% 
     is.na_validator("Mandatory at first capture"),
@@ -37,10 +36,6 @@ inspector.CAPTURES <- function(x, ...){
     x[ , .(author)] %>% 
     is.element_validator(v = data.table(variable = "author", 
     set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  )),
-
-    x[ , .(sex)]  %>% 
-    is.element_validator(v = data.table(variable = "sex", set = list(c("M", "F"))  )),
-
 
 
     x[ , .(gps_id)]   %>% 
@@ -81,6 +76,9 @@ inspector.CAPTURES <- function(x, ...){
 
 
   # SPECIES SPECIFIC: REPH ##################  
+    x[species == 'REPH', .(sex)]  %>% 
+    is.element_validator(v = data.table(variable = "sex", set = list(c("M", "F"))  )),
+  
     x[species == 'REPH', .(LL, LR, UL, UR, cam_id, haema, behav)] %>% 
     is.na_validator,
 
