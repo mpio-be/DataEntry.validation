@@ -249,8 +249,8 @@ inspector.NESTS <- function(x, ...){
     is.element_validator(v = data.table(variable = "nest", 
     set = list( 
         c( idbq("SELECT nest FROM NESTS WHERE nest_state = 'F' ")$nest, x[nest_state == "F"]$nest )
-        )  , 
-    "Nest does not exist in NESTS as found!" ) )  , 
+        ) 
+     ), "Nest does not exist in NESTS as found!, first time nest is found should be entered as F" )  , 
   
 
     x[ , .(m_behav)] %>% 
