@@ -58,9 +58,6 @@ inspector.CAPTURES <- function(x, ...){
           idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2018_REPHatBARROW.CAPTURES' )$combo
           ), "Color Combo already in use (in CAPTURES)! Recapture?"),
 
-    x[, .( UL, LL, UR, LR, recapture = 1)]  %>%  
-    combo_validator(validSet = colorCombos() , 'Combo not within the valid set of combinations?'),
-
     x[, .(start_capture, caught_time)] %>% 
     time_order_validator(time1 = 'start_capture', time2 = 'caught_time', time_max = 60),
 
@@ -76,6 +73,9 @@ inspector.CAPTURES <- function(x, ...){
 
 
   # SPECIES SPECIFIC: REPH ##################  
+    x[species == 'REPH', .( UL, LL, UR, LR, recapture = 1)]  %>%  
+    combo_validator(validSet = colorCombos() , 'Combo not within the valid set of combinations?'),
+  
     x[species == 'REPH', .(sex)]  %>% 
     is.element_validator(v = data.table(variable = "sex", set = list(c("M", "F"))  )),
   
