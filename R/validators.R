@@ -129,7 +129,7 @@ datetime_validator <- function(x, reason = 'invalid datetime_ - should be: yyyy-
 #'                bleeding_time = c('10:10' , '16:30', '04:08'))
 #' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
 
-time_order_validator <- function(x, time1, time2, time_max, reason = 'invalid time order or bird hold for more than max time set') {
+time_order_validator <- function(x, time1, time2, time_max, units = 'mins', reason = 'invalid time order or bird hold for more than max time set') {
 	
 
 	o = x[, c(time1, time2), with = FALSE]
@@ -137,8 +137,8 @@ time_order_validator <- function(x, time1, time2, time_max, reason = 'invalid ti
 	o[, rowid := .I]
 	
 	fff = function(t1, format, t2) {
-		ifelse(difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = 'mins') >= 0
-					 | difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = 'mins') < -1 * time_max
+		ifelse(difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = units) >= 0
+					 | difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = units) < -1 * time_max
 					 , FALSE, TRUE)
 	}
 	
