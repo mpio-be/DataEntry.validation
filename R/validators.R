@@ -80,6 +80,25 @@ hhmm_validator <- function(x, reason = 'invalid time') {
 	}
 
 #' @rdname  validators
+#' @name    date_validator
+#' @export
+#' @examples
+#'  #----------------------------------------------------#
+#' x = data.table(v1 = c('2017-01-21' , '2012-04-21', '2017-05-21'  ),
+#'                v2 = c('2017' , '2017-01-xx', '2015-01-09'  ) )
+#' print(date_validator(x))
+
+date_validator <- function(x, reason = 'invalid date - should be: yyyy-mm-dd') {
+  regexp = '^\\d\\d\\d\\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])$' # YYYY-MM-DD
+  o = meltall(x)
+  o = o[, v := str_detect(value , regexp) , by = variable]
+  
+  o = o[ (!v) , .(rowid, variable)]
+  o[, reason := reason]
+  o
+}
+
+#' @rdname  validators
 #' @name    datetime_validator
 #' @export
 #' @examples
