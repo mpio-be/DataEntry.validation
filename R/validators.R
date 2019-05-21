@@ -121,6 +121,7 @@ datetime_validator <- function(x, reason = 'invalid datetime_ - should be: yyyy-
 #' @name    time_order_validator
 #' @param time1  start time to compare
 #' @param time2  end time to compare
+#' @param units character string of units in of the time_max
 #' @param time_max maximal time that is passing validation
 #' @export
 #' @examples
@@ -129,7 +130,7 @@ datetime_validator <- function(x, reason = 'invalid datetime_ - should be: yyyy-
 #'                bleeding_time = c('10:10' , '16:30', '04:08'))
 #' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
 
-time_order_validator <- function(x, time1, time2, time_max, units = 'mins', reason = 'invalid time order or bird hold for more than max time set') {
+time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reason = 'invalid time order or bird hold for more than max time set') {
 	
 
 	o = x[, c(time1, time2), with = FALSE]
