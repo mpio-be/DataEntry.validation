@@ -2,6 +2,7 @@
 
 export(POSIXct_validator)
 export(combo_validator)
+export(date_validator)
 export(datetime_validator)
 export(evalidators)
 export(hhmm_validator)

@@ -5,6 +5,7 @@
 \alias{is.na_validator}
 \alias{POSIXct_validator}
 \alias{hhmm_validator}
+\alias{date_validator}
 \alias{datetime_validator}
 \alias{time_order_validator}
 \alias{interval_validator}
@@ -23,10 +24,12 @@ POSIXct_validator(x,
 
 hhmm_validator(x, reason = "invalid time")
 
+date_validator(x, reason = "invalid date - should be: yyyy-mm-dd")
+
 datetime_validator(x,
   reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm")
 
-time_order_validator(x, time1, time2, time_max,
+time_order_validator(x, time1, time2, units = "mins", time_max,
   reason = "invalid time order or bird hold for more than max time set")
 
 interval_validator(x, v, reason = "unusually small or large measure")
@@ -49,6 +52,8 @@ combo_validator(x, validSet, reason)
 \item{time1}{start time to compare}
 
 \item{time2}{end time to compare}
+
+\item{units}{character string of units in of the time_max}
 
 \item{time_max}{maximal time that is passing validation}
 
@@ -100,6 +105,10 @@ POSIXct_validator(x)
 x = data.table(v1 = c('02:04' , '16:56', '23:59'  ),
  v2 = c('24:04' , NA, '23:59'  ) )
 hhmm_validator(x)
+ #----------------------------------------------------#
+x = data.table(v1 = c('2017-01-21' , '2012-04-21', '2017-05-21'  ),
+               v2 = c('2017' , '2017-01-xx', '2015-01-09'  ) )
+print(date_validator(x))
  #----------------------------------------------------#
 x = data.table(v1 = c('2017-01-21 02:04' , '2012-04-21 16:56', '2017-05-21 23:59'  ),
                v2 = c('2017-07-27 00:00' , '2017-01-21', '2015-01-09 23:59'  ) )

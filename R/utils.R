@@ -4,7 +4,11 @@
 #' @param na.rm  TRUE by default
 #' @export
 meltall <- function(x, na.rm = TRUE) {
-    x[, rowid := .I]
+    if(! 'rowid' %in% names(x)) {
+        x[, rowid := .I]
+        message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
+        }
+
     
     suppressWarnings(data.table::melt(x, id.vars = 'rowid', variable.factor = FALSE, value.factor = FALSE, na.rm = na.rm))
     
