@@ -151,10 +151,13 @@ datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyy
 
 time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reason = 'invalid time order or bird hold for more than max time set') {
 	
-
 	o = x[, c(time1, time2), with = FALSE]
 	setnames(o, c('time1', 'time2'))
-	o[, rowid := .I]
+	if(! 'rowid' %in% names(x)) {
+        x[, rowid := .I]
+        message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
+        }else{o[, rowid := x$rowid]}
+
 	
 	fff = function(t1, format, t2) {
 		ifelse(difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = units) >= 0
@@ -170,6 +173,47 @@ time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reas
 	o
 	
 }
+
+
+
+#' @rdname  validators
+#' @name    datetime_order_validator
+#' @param time1  start datetime to compare
+#' @param time2  end datetime to compare
+#' @param units character string of units in of the time_max
+#' @param time_max maximal time that is passing validation (given the units)
+#' @export
+#' @examples
+#'  #----------------------------------------------------#
+#' x = data.table(cap_time = c('2019-06-03 16:04:47' , '2019-04-05 16:40', '2019-04-05 01:55'),
+#'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'))
+#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
+
+datetime_order_validator <- function(x, time1, time2, units_ = 'days', time_max, reason = 'invalid time order or bird hold for more than max time set') {
+  
+
+  o = x[, c(time1, time2,time_max), with = FALSE]
+  setnames(o, c('time1', 'time2', 'time_max'))
+  if(! 'rowid' %in% names(x)) {
+        x[, rowid := .I]
+        message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
+        }else{o[, rowid := x$rowid]}
+
+  fff = function(t1, format, t2, time_max) {
+        ifelse(difftime(as.POSIXct(t1), as.POSIXct(t2), units = units_) >= 0
+                     | difftime(as.POSIXct(t1), as.POSIXct(t2), units = units_) < -1 * time_max
+                     , FALSE, TRUE)
+    }
+
+  o[, v := fff(time1, format, time2, time_max), by =  .(rowid)] 
+  
+  o = o[ (!v) , .(rowid)]
+  o[, variable := time1]
+  o[, reason := reason]
+  o
+  
+}
+
 
 
 #' @rdname   validators
