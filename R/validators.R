@@ -118,6 +118,25 @@ datetime_validator <- function(x, reason = 'invalid datetime_ - should be: yyyy-
 }
 
 #' @rdname  validators
+#' @name    datetime_validator with seconds
+#' @export
+#' @examples
+#'  #----------------------------------------------------#
+#' x = data.table(v1 = c('2017-01-21 02:04:55' , '2012-04-21 16:56:01', '2017-05-21 23:59:00'  ),
+#'                v2 = c('2017-07-27 00:00' , '2017-01-21', '2015-01-09 23:59:01'  ) )
+#' datetime_validatorSS(x)
+
+datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyyy-mm-dd hh:mm:ss') {
+	regexp = '^\\d\\d\\d\\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01]) ([0-1][0-9]|[2][0-3]):([0-5][0-9]):([0-5][0-9])$' # YYYY-MM-DD hh:mm:ss
+	o = meltall(x)
+	o = o[, v := str_detect(value , regexp) , by = variable]
+	
+	o = o[ (!v) , .(rowid, variable)]
+	o[, reason := reason]
+	o
+}
+
+#' @rdname  validators
 #' @name    time_order_validator
 #' @param time1  start time to compare
 #' @param time2  end time to compare
@@ -297,6 +316,7 @@ combo_validator <- function(x, validSet, reason) {
 
 	o = o[, .(rowid, variable, reason)]
 	}
+
 
 
 
