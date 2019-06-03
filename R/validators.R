@@ -191,9 +191,14 @@ time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reas
 
 datetime_order_validator <- function(x, time1, time2, units_ = 'days', time_max, reason = 'invalid time order or bird hold for more than max time set') {
   
-
-  o = x[, c(time1, time2,time_max), with = FALSE]
-  setnames(o, c('time1', 'time2', 'time_max'))
+ if(! time_max %in% names(x)) {
+ 	o = x[, c(time1, time2), with = FALSE]
+ 	setnames(o, c('time1', 'time2'))
+ 	o[, time_max := time_max] } else{
+  			o = x[, c(time1, time2,time_max), with = FALSE]
+  			setnames(o, c('time1', 'time2', 'time_max'))
+	}
+	
   if(! 'rowid' %in% names(x)) {
         x[, rowid := .I]
         message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
