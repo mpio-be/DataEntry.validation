@@ -31,8 +31,8 @@ context("Functions for validation")
         expect_equal(nrow(o), 1)
 
         # time-order
-        x = data.table(v2 = c('10:10' , '16:30', '02:08'  ), v1 = c('10:04' , '16:40', '01:55'  ) )
-        o = time_order_validator(x, 'v1', 'v2', time_max = 30)
+        x = data.table(v2 = c('10:10' , '16:30', '02:08'  ), v1 = c('10:04' , '16:40', '01:08'  ) )
+        o = time_order_validator(x, 'v1', 'v2')
         expect_identical( names(is.na_validator(x)), VN)
         expect_equal(nrow(o), 1)
 
