@@ -150,7 +150,7 @@ datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyy
 #' t = time_order_validator(x, time1 = 'cap_time', 
 #' time2 = 'bleeding_time')
 
-time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'invalid time order or time difference larger than expected') {
+time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'invalid time order or time difference larger than expected', time_max = 60) {
 	
 	if(! 'rowid' %in% names(x)) {
 	    x[, rowid := .I]
@@ -169,7 +169,7 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 		o[, dt2 := f(time2) ]
 
 	o[, difft := difftime(dt2, dt1, units = units)]
-	o[, invalid := difft < 0]
+	o[, invalid := difft < 0 | difft > time_max]
 
 
 	
