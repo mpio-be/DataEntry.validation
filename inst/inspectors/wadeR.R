@@ -1,16 +1,26 @@
 #' ==========================================================================
 #' validators used by wadeR package. 
 #' require(wadeR)
+#' require(glue)
+#' require(stringr)
+#' require(foreach)
 #' require(DataEntry.validation)
 #' 
 #' 
-#' x = wadeR::idbq('select * from RESIGHTINGS ')
-#' class(x) = c(class(x), 'RESIGHTINGS')
+#' tabs = c('CAPTURES', 'RESIGHTINGS', 'NESTS', 'EGGS_CHICKS_field', 'DEVICES')
 #' 
-#' inspector_loader(package = 'wadeR')
+#' o = foreach(i = 1:length(tabs), .combine = rbind) %do% {
 #' 
-#' ii = inspector(x)
-#' evalidators(ii)
+#'  x = wadeR::idbq( glue('select * from {tabs[i]} ') )
+#'  class(x) = c(class(x), tabs[i] )
+#'  
+#'  inspector_loader(package = 'wadeR')
+#'  
+#'  ii = inspector(x)
+#'  evalidators(ii)
+#'  
+#'  }
+#' 
 #'
 #' ==========================================================================
 
@@ -209,7 +219,9 @@ inspector.RESIGHTINGS <- function(x, ...){
     "Other individuals more than 25 m away? - Individuals really together?" )
 
 
-  )}
+  )
+
+  }
 
 
 inspector.NESTS <- function(x, ...){  
