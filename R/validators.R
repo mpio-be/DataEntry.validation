@@ -30,6 +30,7 @@ is.na_validator <- function(x, reason = 'mandatory') {
 
 #' @rdname validators
 #' @name   POSIXct_validator
+#' @param ago       number of days indicating old data entry (set to a week)
 #' @export
 #' @examples
 #' #----------------------------------------------------#
@@ -44,7 +45,7 @@ is.na_validator <- function(x, reason = 'mandatory') {
 #' POSIXct_validator(x)
 #' 
 #' 
-POSIXct_validator <- function(x, reason = 'date-time wrong, in the future or older than a week') {
+POSIXct_validator <- function(x, ago = 7, reason = 'date-time wrong, in the future or older than a week') {
 	o = meltall(x)
 
 	o[, datetime_ := strp_date_or_time(value) ]
@@ -52,7 +53,7 @@ POSIXct_validator <- function(x, reason = 'date-time wrong, in the future or old
 	o[, v := TRUE] # we are optimistic
 	o[ !is.na(value) & is.na(datetime_), v := FALSE]
 	o[ datetime_ > as.POSIXct(Sys.Date()+1) , v := FALSE]  # do not allow future dates
-	o[ datetime_ < Sys.time() - 3600*24*7 , v:= FALSE ] # more than a week ago
+	o[ datetime_ < Sys.time() - 3600*24*ago , v:= FALSE ] # more than a week ago
 
 	o = o[ (!v) , .(rowid, variable)]
 	o[, reason := reason]
