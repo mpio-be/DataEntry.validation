@@ -148,27 +148,33 @@ datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyy
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('10:04' , '16:40', '01:55'),
 #'                bleeding_time = c('10:10' , '16:30', '04:08'))
-#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
+#' t = time_order_validator(x, time1 = 'cap_time', 
+#' time2 = 'bleeding_time')
 
-time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reason = 'invalid time order or bird hold for more than max time set') {
+time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'invalid time order or time difference larger than expected') {
 	
-	o = x[, c(time1, time2), with = FALSE]
-	setnames(o, c('time1', 'time2'))
 	if(! 'rowid' %in% names(x)) {
-        x[, rowid := .I]
-        message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
-        }else{o[, rowid := x$rowid]}
+	    x[, rowid := .I]
+	    message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
+	    	}
+
+
+	o = x[, c(time1, time2, 'rowid'), with = FALSE]
+	setnames(o, c('time1', 'time2', 'rowid'))
+
+	f = function(x) strptime(x, format = "%H:%M") %>% as.POSIXct
+
+	if( inherits(o$time1, 'character' ) )
+		o[, dt1 := f(time1) ]
+	if( inherits(o$time2, 'character' ) )
+		o[, dt2 := f(time2) ]
+
+	o[, difft := difftime(dt2, dt1, units = units)]
+	o[, invalid := difft < 0]
+
 
 	
-	fff = function(t1, format, t2) {
-		ifelse(difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = units) >= 0
-					 | difftime(strptime(t1, format = "%H:%M"), strptime(t2, format = "%H:%M"), units = units) < -1 * time_max
-					 , FALSE, TRUE)
-	}
-	
-	o[, v := fff(time1, format, time2), by =  .(rowid)] 
-	
-	o = o[ (!v) , .(rowid)]
+	o = o[ (invalid) , .(rowid)]
 	o[, variable := time1]
 	o[, reason := reason]
 	o
@@ -181,43 +187,17 @@ time_order_validator <- function(x, time1, time2, units = 'mins', time_max, reas
 #' @name    datetime_order_validator
 #' @param time1  start datetime to compare
 #' @param time2  end datetime to compare
-#' @param units character string of units in of the time_max
-#' @param time_max maximal time that is passing validation (given the units)
+#' @param units character string of units
 #' @export
 #' @examples
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('2019-06-03 16:04:47' , '2019-04-05 16:40', '2019-04-05 01:55'),
 #'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'))
-#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
+#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time')
 
-datetime_order_validator <- function(x, time1, time2, units_ = 'days', time_max, reason = 'invalid time order or bird hold for more than max time set') {
+datetime_order_validator <- function(x, time1, time2, units_ = 'days', reason = 'invalid time order') {
   
- if(! time_max %in% names(x)) {
- 	o = x[, c(time1, time2), with = FALSE]
- 	setnames(o, c('time1', 'time2'))
- 	o[, time_max := time_max] } else{
-  			o = x[, c(time1, time2,time_max), with = FALSE]
-  			setnames(o, c('time1', 'time2', 'time_max'))
-	}
-	
-  if(! 'rowid' %in% names(x)) {
-        x[, rowid := .I]
-        message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
-        }else{o[, rowid := x$rowid]}
-
-  fff = function(t1, format, t2, time_max) {
-        ifelse(difftime(as.POSIXct(t1), as.POSIXct(t2), units = units_) >= 0
-                     | difftime(as.POSIXct(t1), as.POSIXct(t2), units = units_) < -1 * time_max
-                     , FALSE, TRUE)
-    }
-
-  o[, v := fff(time1, format, time2, time_max), by =  .(rowid)] 
-  
-  o = o[ (!v) , .(rowid)]
-  o[, variable := time1]
-  o[, reason := reason]
-  o
-  
+ time_order_validator(x = x, time1 = time1, time2 = time2, units=  units, reason = reason) 
 }
 
 

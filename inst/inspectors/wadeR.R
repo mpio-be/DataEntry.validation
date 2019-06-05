@@ -21,10 +21,10 @@ inspector.CAPTURES <- function(x, ...){
 
   # GENERAL #################################  
     # Mandatory to enter
-    x[, .(date_, form_id, author, gps_id, gps_point, ID, recapture, capture_meth, weight, blood_dna)] %>% 
+    x[, .(date_, form_id, author, gps_id, gps_point, ID, recapture, capture_meth, weight, blood_dna, rowid)] %>% 
     is.na_validator,
 
-    x[recapture == 0, .(tarsus, culmen, total_head, wing)]  %>% 
+    x[recapture == 0, .(tarsus, culmen, total_head, wing, rowid)]  %>% 
     is.na_validator("Mandatory at first capture"),
 
 
@@ -47,7 +47,7 @@ inspector.CAPTURES <- function(x, ...){
     "GPS waypoint is over 999?" ),
 
     # Entry would be duplicate
-    x[recapture == 0 & !is.na(ID), .(ID)] %>% is.duplicate_validator(v = data.table(variable = "ID", 
+    x[recapture == 0 & !is.na(ID), .(ID,, rowid)] %>% is.duplicate_validator(v = data.table(variable = "ID", 
         set = list( c(str_sub(idbq("SELECT ID FROM CAPTURES")$ID, -5),70101:70427   )  ) ), "
                   Metal band already in use! Recapture?" ),
 
@@ -67,49 +67,49 @@ inspector.CAPTURES <- function(x, ...){
     x[, .(bled_time, released_time)] %>% 
     time_order_validator(time1 = 'bled_time', time2 = 'released_time', time_max = 60),
 
-    x[!is.na(nest), .(nest)] %>% 
+    x[!is.na(nest), .(nest, rowid)] %>% 
     is.element_validator(v = data.table(variable = "nest", set = list(idbq("SELECT * FROM NESTS")$nest  ) ), 
     "Nest not found in NESTS!" ),
 
 
   # SPECIES SPECIFIC: REPH ##################  
-    x[species == 'REPH', .( UL, LL, UR, LR, recapture = 1)]  %>%  
+    x[species == 'REPH', .( UL, LL, UR, LR, recapture = 1, rowid)]  %>%  
     combo_validator(validSet = colorCombos() , 'Combo not within the valid set of combinations?'),
   
-    x[species == 'REPH', .(sex)]  %>% 
+    x[species == 'REPH', .(sex, rowid)]  %>% 
     is.element_validator(v = data.table(variable = "sex", set = list(c("M", "F"))  )),
   
-    x[species == 'REPH', .(LL, LR, UL, UR, cam_id, haema, behav)] %>% 
+    x[species == 'REPH', .(LL, LR, UL, UR, cam_id, haema, behav, rowid)] %>% 
     is.na_validator,
 
-    x[sex == 2 & species == 'REPH', .(carries_egg)] %>% 
+    x[sex == 2 & species == 'REPH', .(carries_egg, rowid)] %>% 
     is.na_validator("Mandatory for females"),
 
-    x[species == 'REPH', .(bled_time)]  %>% hhmm_validator( ),
+    x[species == 'REPH', .(bled_time, rowid)]  %>% hhmm_validator( ),
 
-    x[species == 'REPH', .(ID)] %>% 
+    x[species == 'REPH', .(ID, rowid)] %>% 
     is.element_validator(v = data.table(variable = "ID", 
     set = list(c(70001:71000, 45001:46000)) ), "Wrong REPH band" ),
 
 
     # Entry should be within specific interval
-    x[species == 'REPH', .(tarsus)]     %>% 
+    x[species == 'REPH', .(tarsus, rowid)]     %>% 
     interval_validator( v = data.table(variable = "tarsus", lq = 20, uq = 24 ),   
     "Measurement out of typical range" ),
 
-    x[species == 'REPH', .(culmen)] %>% 
+    x[species == 'REPH', .(culmen, rowid)] %>% 
     interval_validator( v = data.table(variable = "culmen",     lq = 20, uq = 25 ),   
     "Measurement out of typical range" ),
 
-    x[species == 'REPH', .(total_head)] %>% 
+    x[species == 'REPH', .(total_head, rowid)] %>% 
     interval_validator( v = data.table(variable = "total_head", lq = 43.5, uq = 50 ),
     "Measurement out of typical range" ),
 
-    x[species == 'REPH', .(wing)]       %>% 
+    x[species == 'REPH', .(wing, rowid)]       %>% 
     interval_validator( v = data.table(variable = "wing",       lq = 128, uq = 145 ),
     "Measurement out of typical range" ),
 
-    x[species == 'REPH', .(weight)]     %>% 
+    x[species == 'REPH', .(weight, rowid)]     %>% 
     interval_validator( v = data.table(variable = "weight",   lq = 40, uq = 72 ),   
     "Measurement out of typical range" )
 
@@ -158,48 +158,48 @@ inspector.RESIGHTINGS <- function(x, ...){list(
 
   # SPECIES SPECIFIC: REPH ##################  
 
-    x[species == 'REPH', .(habitat)] %>% 
+    x[species == 'REPH', .(habitat, rowid)] %>% 
     is.na_validator( "No habitat? Please remember to note it" ),
 
 
-    x[species %in% c('REPH', 'PESA'), .(sex)] %>% 
+    x[species %in% c('REPH', 'PESA'), .(sex, rowid)] %>% 
     is.na_validator("Sex not identified?"),
 
 
-    x[species == 'REPH', .(habitat)]   %>% 
+    x[species == 'REPH', .(habitat, rowid)]   %>% 
     is.element_validator(v = data.table(variable = "habitat",  
     set = list(c("W", "G"))  )),
 
-    x[species == 'REPH', .(aggres)]    %>% 
+    x[species == 'REPH', .(aggres, rowid)]    %>% 
     is.element_validator(v = data.table(variable = "aggres",   
     set = list(c("D", "D0", "D1", "F","F0", "F1", "B", "B0", "B1", "O", "O0","O1", NA, ""))  )),
 
-    x[species == 'REPH', .(displ)]     %>% 
+    x[species == 'REPH', .(displ, rowid)]     %>% 
     is.element_validator(v = data.table(variable = "displ",    
     set = list(c("K", "K0", "K1", "F", "F0", "F1", "P", "P0", "P1", NA, ""))  )),
 
-    x[species == 'REPH', .(cop)]       %>% 
+    x[species == 'REPH', .(cop, rowid)]       %>% 
     is.element_validator(v = data.table(variable = "cop",      
     set = list(c("S", "S0", "S1", "A", "A0", "A1", NA, ""))  )),
 
-    x[species == 'REPH', .(flight)]    %>% 
+    x[species == 'REPH', .(flight, rowid)]    %>% 
     is.element_validator(v = data.table(variable = "flight",   
     set = list(c("F", "F0", "F1","C", "C0", "C1", "CF", "CF0", "CF1", NA, ""))  )),
 
-    x[species == 'REPH', .(voc)]       %>% 
+    x[species == 'REPH', .(voc, rowid)]       %>% 
     is.element_validator(v = data.table(variable = "voc",      
     set = list(c("Y", "N", NA, ""))  )),
 
-    x[species == 'REPH', .(maint)]     %>% 
+    x[species == 'REPH', .(maint, rowid)]     %>% 
     is.element_validator(v = data.table(variable = "maint",    
     set = list(c("F", "R", "P", "A", "BW", NA, "", "F,P", "P,F", "F,R", "F,A", "P,A", "O"))  )),
 
-    x[species == 'REPH', .(spin)]      %>% 
+    x[species == 'REPH', .(spin, rowid)]      %>% 
     is.element_validator(v = data.table(variable = "spin",     
     set = list(c("C", "AC", "B", NA, ""))  )),
 
 
-    x[!is.na(min_dist) && species == 'REPH', .(min_dist)] %>%
+    x[!is.na(min_dist) && species == 'REPH', .(min_dist, rowid)] %>%
     interval_validator(v = data.table(variable = "min_dist",   lq = 0, uq = 25 ), 
     "Other individuals more than 25 m away? - Individuals really together?" )
 
@@ -207,7 +207,7 @@ inspector.RESIGHTINGS <- function(x, ...){list(
   )}
 
 
-inspector.NESTS <- function(x, ...){
+inspector.NESTS <- function(x, ...){  
   list(
   
     # GENERAL #################################  
@@ -237,15 +237,15 @@ inspector.NESTS <- function(x, ...){
     is.element_validator(v = data.table(variable = "nest_state",    
     set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  ))  , 
 
-    x[nest_state == "F" | nest_state == "C", .(clutch_size)]  %>% 
+    x[nest_state == "F" | nest_state == "C", .(clutch_size, rowid)]  %>% 
     is.na_validator("Clutch size is missing?")  , 
   
-    x[nest_state == "F", .(nest)] %>% 
+    x[nest_state == "F", .(nest, rowid)] %>% 
     is.duplicate_validator(v = data.table(variable = "nest", 
       set = list(idbq("SELECT nest FROM NESTS")$nest  ) ), 
     "Nest is already assigned! Nest number given twice or nest_state is not F?" )  , 
   
-    x[nest_state != "F", .(nest)] %>% 
+    x[nest_state != "F", .(nest, rowid)] %>% 
     is.element_validator(v = data.table(variable = "nest", 
     set = list( 
         c( idbq("SELECT nest FROM NESTS WHERE nest_state = 'F' ")$nest, x[nest_state == "F"]$nest )
@@ -265,7 +265,7 @@ inspector.NESTS <- function(x, ...){
     interval_validator( v = data.table(variable = "gps_point",  lq = 1, uq = 999), 
     "GPS waypoint is over 999?" ), 
 
-    x[!is.na(clutch_size), .(clutch_size)]  %>% 
+    x[!is.na(clutch_size), .(clutch_size, rowid)]  %>% 
     interval_validator(  v = data.table(variable = "clutch_size", lq = 0, uq = 4 ),  
     "No eggs or more than 4?" ), 
 
@@ -282,36 +282,36 @@ inspector.NESTS <- function(x, ...){
 
   # SPECIES SPECIFIC: REPH ##################  
 
-    x[!is.na(msr_id) && nest2species(nest)== 'REPH' , .(msr_state)]  %>% 
+    x[!is.na(msr_id) && nest2species(nest)== 'REPH' , .(msr_state, rowid)]  %>% 
     is.na_validator("MSR state is missing?"), 
 
-    x[!is.na(msr_state) && nest2species(nest)== 'REPH', .(msr_id)]    %>% 
+    x[!is.na(msr_state) && nest2species(nest)== 'REPH', .(msr_id, rowid)]    %>% 
     is.na_validator("MSR ID is missing!") , 
 
 
-    x[nest2species(nest)== 'REPH' , .(f_behav)] %>% 
+    x[nest2species(nest)== 'REPH' , .(f_behav, rowid)] %>% 
     is.element_validator( v = data.table(variable = "f_behav", 
     set = list(c("INC", "DF", "BW", "O", ""))  )), 
 
-    x[nest2species(nest)== 'REPH'  , .(msr_state)]    %>% 
+    x[nest2species(nest)== 'REPH'  , .(msr_state, rowid)]    %>% 
     is.element_validator( v = data.table(variable = "msr_state",     
     set = list(c("ON", "OFF", "DD", NA, ""))  )), 
 
 
 
-    x[!is.na(male_id) && nest2species(nest)== 'REPH', .(male_id)]  %>% 
+    x[!is.na(male_id) && nest2species(nest)== 'REPH', .(male_id, rowid)]  %>% 
     is.element_validator(  v = data.table(variable = "male_id",   
       set = list(  c(str_sub(idbq("SELECT ID FROM CAPTURES")$ID, -5), 
         idbq("SELECT ID FROM FIELD_2017_REPHatBARROW.CAPTURES")$ID,
         idbq("SELECT ID FROM FIELD_2018_REPHatBARROW.CAPTURES")$ID
         )  ) ), "Metal ID not in in CAPTURES!" ), 
 
-    x[!is.na(female_id) && nest2species(nest)== 'REPH', .(female_id)] %>% 
+    x[!is.na(female_id) && nest2species(nest)== 'REPH', .(female_id, rowid)] %>% 
     is.element_validator( v = data.table(variable = "female_id", 
       set = list(  str_sub(idbq("SELECT ID FROM CAPTURES")$ID, -5)  ) ), 
     "Metal ID not in CAPTURES!" ), 
 
-    x[(!is.na(msr_id) | nchar(msr_id) > 0 )&& nest2species(nest)== 'REPH', .(msr_id)] %>% 
+    x[(!is.na(msr_id) | nchar(msr_id) > 0 )&& nest2species(nest)== 'REPH', .(msr_id, rowid)] %>% 
     is.element_validator( v = data.table(variable = "msr_id", 
      set = list(idbq("SELECT device_id FROM DEVICES")$device_id)  ), 
     "MSR ID is not existing in DEVICES!" ) 
