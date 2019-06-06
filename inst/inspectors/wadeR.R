@@ -91,7 +91,7 @@ inspector.CAPTURES <- function(x, ...){
     x[species == 'REPH', .(sex)]  %>% 
     is.element_validator(v = data.table(variable = "sex", set = list(c("M", "F"))  )),
   
-    x[species == 'REPH', .(LL, LR, UL, UR, cam_id, haema, behav)] %>% 
+    x[species == 'REPH', .(LL, LR, UL, UR, cam_id, behav)] %>% 
     is.na_validator,
 
     x[sex == 2 & species == 'REPH', .(carries_egg)] %>% 
