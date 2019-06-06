@@ -4,7 +4,7 @@ Title: Tools to ensure the accuracy and reliability of the data.
 Description: Do datasets follow a set of well defined properties?.
             Similar to database constraints but more flexible  and more accurate in reporting
             where issues are.
-Version: 0.1.32
+Version: 0.1.3
 Authors@R: c(
     person("Mihai", "Valcu", role=c("aut", "cre"),  email="valcu@orn.mpg.de"),
     person("Martin", "Bulla", role= "ctb",        email="bulla.mar@gmail.com"),

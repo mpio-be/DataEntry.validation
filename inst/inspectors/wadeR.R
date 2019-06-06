@@ -77,7 +77,7 @@ inspector.CAPTURES <- function(x, ...){
     #time_order_validator(time1 = 'caught_time', time2 = 'bled_time', time_max = 60),
 
     x[, .(caught_time, released_time)] %>% 
-    time_order_validator(time1 = 'bled_time', time2 = 'released_time', time_max = 60),
+    time_order_validator(time1 = 'caught_time', time2 = 'released_time', time_max = 60),
 
     x[!is.na(nest), .(nest)] %>% 
     is.element_validator(v = data.table(variable = "nest", set = list(idbq("SELECT * FROM NESTS")$nest  ) ), 
@@ -97,7 +97,6 @@ inspector.CAPTURES <- function(x, ...){
     x[sex == 2 & species == 'REPH', .(carries_egg)] %>% 
     is.na_validator("Mandatory for females"),
 
-    x[species == 'REPH', .(bled_time)]  %>% hhmm_validator( ),
 
     x[species == 'REPH', .(ID)] %>% 
     is.element_validator(v = data.table(variable = "ID", 
