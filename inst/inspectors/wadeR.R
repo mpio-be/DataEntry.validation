@@ -70,13 +70,13 @@ inspector.CAPTURES <- function(x, ...){
           idbq('select CONCAT(UL, "-", LL, "|",UR, "-", LR) combo FROM FIELD_2018_REPHatBARROW.CAPTURES' )$combo
           ), "Color Combo already in use (in CAPTURES)! Recapture?"),
 
-    x[, .(start_capture, caught_time)] %>% 
-    time_order_validator(time1 = 'start_capture', time2 = 'caught_time', time_max = 60),
+    # x[, .(start_capture, caught_time)] %>% 
+    # time_order_validator(time1 = 'start_capture', time2 = 'caught_time', time_max = 60),
 
-    x[, .(caught_time, bled_time)] %>% 
-    time_order_validator(time1 = 'caught_time', time2 = 'bled_time', time_max = 60),
+    #x[, .(caught_time, bled_time)] %>% 
+    #time_order_validator(time1 = 'caught_time', time2 = 'bled_time', time_max = 60),
 
-    x[, .(bled_time, released_time)] %>% 
+    x[, .(caught_time, released_time)] %>% 
     time_order_validator(time1 = 'bled_time', time2 = 'released_time', time_max = 60),
 
     x[!is.na(nest), .(nest)] %>% 
