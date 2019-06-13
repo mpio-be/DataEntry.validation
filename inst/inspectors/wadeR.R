@@ -17,7 +17,7 @@
 #'  inspector_loader(package = 'wadeR')
 #'  
 #'  ii = inspector(x)
-#'  evalidators(ii)
+#'  evalidators(ii)[, table :=  tabs[i] ]
 #'  
 #'  }
 #' 
@@ -33,7 +33,7 @@ inspector.CAPTURES <- function(x, ...){
 
   # GENERAL #################################  
     # Mandatory to enter
-    x[, .(date_, form_id, author, gps_id, gps_point, ID, recapture, capture_meth, weight, blood_dna)] %>% 
+    x[, .(date_,species, form_id, author, gps_id, gps_point, ID, recapture, capture_meth, weight, blood_dna)] %>% 
     is.na_validator,
 
     x[recapture == 0, .(tarsus, culmen, total_head, wing)]  %>% 
@@ -48,6 +48,11 @@ inspector.CAPTURES <- function(x, ...){
     x[ , .(author)] %>% 
     is.element_validator(v = data.table(variable = "author", 
     set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  )),
+
+    x[ , .(species)] %>% 
+    is.element_validator(v = data.table(variable = "species",    
+    set = list(c("REPH", "LBDO", "PESA", "SESA"))  ))  , 
+
 
 
     x[ , .(gps_id)]   %>% 
@@ -137,7 +142,7 @@ inspector.RESIGHTINGS <- function(x, ...){
   list(
 
   # GENERAL #################################   
-    x[, .(author, gps_id, gps_point)] %>% 
+    x[, .(author, gps_id, gps_point, species)] %>% 
     is.na_validator,
 
     x[, .(LR)]%>% 
@@ -155,6 +160,11 @@ inspector.RESIGHTINGS <- function(x, ...){
     x[, .(sex)]       %>% 
     is.element_validator(v = data.table(variable = "sex",      
     set = list(c("M", "F"))  )),
+
+    x[ , .(species)] %>% 
+    is.element_validator(v = data.table(variable = "species",    
+    set = list(c("REPH", "LBDO", "PESA", "SESA"))  ))  , 
+
 
     x[, .(gps_id)]  %>% 
     interval_validator( v = data.table(variable = "gps_id",     lq = 1, uq = 20),  
@@ -236,7 +246,7 @@ inspector.NESTS <- function(x, ...){
     
     x[ , .(time_left)] %>% hhmm_validator       , 
 
-    x[, .(author, nest, date_, time_appr,  nest_state)]  %>% 
+    x[, .(author, nest, species, date_, time_appr,  nest_state)]  %>% 
     is.na_validator("Mandatory entry is missing!"), 
     
     x[, .(time_left)] %>% 
@@ -251,9 +261,19 @@ inspector.NESTS <- function(x, ...){
     is.element_validator(v = data.table(variable = "author", 
     set = list(idbq("SELECT initials ii FROM AUTHORS")$ii   )  ))  ,
 
+
+
+
     x[ , .(nest_state)] %>% 
     is.element_validator(v = data.table(variable = "nest_state",    
     set = list(c("F", "C", "I", "pP", "P", "pD", "D", "H", "notA"))  ))  , 
+
+
+    x[ , .(species)] %>% 
+    is.element_validator(v = data.table(variable = "species",    
+    set = list(c("REPH", "LBDO", "PESA", "SESA"))  ))  , 
+
+
 
     x[nest_state == "F" | nest_state == "C", .(clutch_size)]  %>% 
     is.na_validator("Clutch size is missing?")  , 
