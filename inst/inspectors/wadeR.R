@@ -314,7 +314,7 @@ inspector.NESTS <- function(x, ...){
     x[, .(nest)]  %>% 
     is.element_validator(  v = data.table(variable = "nest", 
       set = list( 
-        c(paste0("R", 101:999), 
+        c(paste0("R", 101:9999), 
           paste0("N", 101:999), 
           paste0("P", 101:999), 
           paste0("S", 101:999), 
