@@ -249,6 +249,9 @@ inspector.NESTS <- function(x, ...){
     x[, .(author, nest, species, date_, time_appr,  nest_state)]  %>% 
     is.na_validator("Mandatory entry is missing!"), 
     
+    x[nest_state == 'F', .(gps_id, gps_point)]  %>% 
+      is.na_validator("Mandatory entry is missing!"), 
+    
     x[, .(time_left)] %>% 
     is.na_validator("Please remember to note the time you leave the nest!"), 
  
