@@ -142,12 +142,12 @@ datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyy
 #' @param time1  start time to compare
 #' @param time2  end time to compare
 #' @param units character string of units in of the time_max
-#' @param time_max maximal time that is passing validation
+#' @param time_max maximal time difference that is passing validation
 #' @export
 #' @examples
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('10:04' , '16:40', '01:55'),
-#'                bleeding_time = c('10:10' , '16:30', '04:08'))
+#'                bleeding_time = c('10:10' , '16:30', '04:08'), rowid =)
 #' t = time_order_validator(x, time1 = 'cap_time', 
 #' time2 = 'bleeding_time')
 
@@ -157,7 +157,6 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 	    x[, rowid := .I]
 	    message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
 	    	}
-
 
 	o = x[, c(time1, time2, 'rowid'), with = FALSE]
 	setnames(o, c('time1', 'time2', 'rowid'))
@@ -171,8 +170,6 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 
 	o[, difft := difftime(dt2, dt1, units = units)]
 	o[, invalid := difft < 0 | difft > time_max]
-
-
 	
 	o = o[ (invalid) , .(rowid)]
 	o[, variable := time1]
@@ -188,16 +185,38 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 #' @param time1  start datetime to compare
 #' @param time2  end datetime to compare
 #' @param units character string of units
+#' @param time_max maximal time difference that is passing validation
 #' @export
 #' @examples
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('2019-06-03 16:04:47' , '2019-04-05 16:40', '2019-04-05 01:55'),
 #'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'))
-#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time')
+#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', rowid = 1:3)
 
-datetime_order_validator <- function(x, time1, time2, units_ = 'days', reason = 'invalid time order') {
-  
- time_order_validator(x = x, time1 = time1, time2 = time2, units=  units, reason = reason) 
+datetime_order_validator <- function(x, time1, time2, units_ = 'days', reason = 'invalid datetime order or datetime difference larger than expected', time_max = 30) {
+
+ if(! 'rowid' %in% names(x)) {
+	    x[, rowid := .I]
+	    message("rowid is missing from x so it will be added now. If x is a subset then rowid does not reflect the row position in the non-subsetted x")
+	    	}
+
+	o = x[, c(time1, time2, 'rowid'), with = FALSE]
+	setnames(o, c('time1', 'time2', 'rowid'))
+
+
+	if( inherits(o$time1, 'character' ) )
+		o[, dt1 := as.POSIXct(time1) ]
+	if( inherits(o$time2, 'character' ) )
+		o[, dt2 := as.POSIXct(time2) ]
+
+	o[, difft := difftime(dt2, dt1, units = units)]
+	o[, invalid := difft < 0 | difft > time_max]
+
+	o = o[ (invalid) , .(rowid)]
+	o[, variable := time1]
+	o[, reason := reason]
+	o
+
 }
 
 
