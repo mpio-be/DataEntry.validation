@@ -205,11 +205,11 @@ datetime_order_validator <- function(x, time1, time2, units = 'days', reason = '
 
 
 	if( inherits(o$time1, 'character' ) )
-		o[, dt1 := as.POSIXct(time1) ]
+		o[, time1 := as.POSIXct(time1) ]
 	if( inherits(o$time2, 'character' ) )
-		o[, dt2 := as.POSIXct(time2) ]
+		o[, time2 := as.POSIXct(time2) ]
 
-	o[, difft := difftime(dt2, dt1, units = units)]
+	o[, difft := difftime(time2, time1, units = units)]
 	o[, invalid := difft < 0 | difft > time_max]
 
 	o = o[ (invalid) , .(rowid)]
