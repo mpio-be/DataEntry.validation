@@ -193,7 +193,7 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 #'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'), rowid = 1:3)
 #' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time')
 
-datetime_order_validator <- function(x, time1, time2, units_ = 'days', reason = 'invalid datetime order or datetime difference larger than expected', time_max = 30) {
+datetime_order_validator <- function(x, time1, time2, units = 'days', reason = 'invalid datetime order or datetime difference larger than expected', time_max = 30) {
 
  if(! 'rowid' %in% names(x)) {
 	    x[, rowid := .I]
