@@ -147,7 +147,7 @@ datetime_validatorSS <- function(x, reason = 'invalid datetime_ - should be: yyy
 #' @examples
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('10:04' , '16:40', '01:55'),
-#'                bleeding_time = c('10:10' , '16:30', '04:08'), rowid =)
+#'                bleeding_time = c('10:10' , '16:30', '04:08'), rowid =1:3)
 #' t = time_order_validator(x, time1 = 'cap_time', 
 #' time2 = 'bleeding_time')
 
@@ -190,8 +190,8 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 #' @examples
 #'  #----------------------------------------------------#
 #' x = data.table(cap_time = c('2019-06-03 16:04:47' , '2019-04-05 16:40', '2019-04-05 01:55'),
-#'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'))
-#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', rowid = 1:3)
+#'                bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'), rowid = 1:3)
+#' t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time')
 
 datetime_order_validator <- function(x, time1, time2, units_ = 'days', reason = 'invalid datetime order or datetime difference larger than expected', time_max = 30) {
 
