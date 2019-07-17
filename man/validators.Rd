@@ -7,7 +7,10 @@
 \alias{hhmm_validator}
 \alias{date_validator}
 \alias{datetime_validator}
+\alias{datetime_validator with seconds}
+\alias{datetime_validatorSS}
 \alias{time_order_validator}
+\alias{datetime_order_validator}
 \alias{interval_validator}
 \alias{nchar_validator}
 \alias{is.element_validator}
@@ -19,7 +22,7 @@
 \usage{
 is.na_validator(x, reason = "mandatory")
 
-POSIXct_validator(x,
+POSIXct_validator(x, ago = 7,
   reason = "date-time wrong, in the future or older than a week")
 
 hhmm_validator(x, reason = "invalid time")
@@ -29,8 +32,16 @@ date_validator(x, reason = "invalid date - should be: yyyy-mm-dd")
 datetime_validator(x,
   reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm")
 
-time_order_validator(x, time1, time2, units = "mins", time_max,
-  reason = "invalid time order or bird hold for more than max time set")
+datetime_validatorSS(x,
+  reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm:ss")
+
+time_order_validator(x, time1, time2, units = "mins",
+  reason = "invalid time order or time difference larger than expected",
+  time_max = 60)
+
+datetime_order_validator(x, time1, time2, units = "days",
+  reason = "invalid datetime order or datetime difference larger than expected",
+  time_max = 30)
 
 interval_validator(x, v, reason = "unusually small or large measure")
 
@@ -49,17 +60,27 @@ combo_validator(x, validSet, reason)
 
 \item{reason}{explain why it did not pass the validation.}
 
+\item{ago}{number of days indicating old data entry (set to a week)}
+
 \item{time1}{start time to compare}
 
 \item{time2}{end time to compare}
 
 \item{units}{character string of units in of the time_max}
 
-\item{time_max}{maximal time that is passing validation}
+\item{time_max}{maximal time difference that is passing validation}
 
 \item{v}{a data.table containing the validation rules. See notes.}
 
 \item{validSet}{for combo_validator: a vector containing the possible colours}
+
+\item{time1}{start datetime to compare}
+
+\item{time2}{end datetime to compare}
+
+\item{units}{character string of units}
+
+\item{time_max}{maximal time difference that is passing validation}
 }
 \value{
 \preformatted{   a data.table with two columns: variable (the names of the columns in x) 
@@ -114,9 +135,18 @@ x = data.table(v1 = c('2017-01-21 02:04' , '2012-04-21 16:56', '2017-05-21 23:59
                v2 = c('2017-07-27 00:00' , '2017-01-21', '2015-01-09 23:59'  ) )
 datetime_validator(x)
  #----------------------------------------------------#
+x = data.table(v1 = c('2017-01-21 02:04:55' , '2012-04-21 16:56:01', '2017-05-21 23:59:00'  ),
+               v2 = c('2017-07-27 00:00' , '2017-01-21', '2015-01-09 23:59:01'  ) )
+datetime_validatorSS(x)
+ #----------------------------------------------------#
 x = data.table(cap_time = c('10:04' , '16:40', '01:55'),
-               bleeding_time = c('10:10' , '16:30', '04:08'))
-t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time', time_max = 60)
+               bleeding_time = c('10:10' , '16:30', '04:08'), rowid =1:3)
+t = time_order_validator(x, time1 = 'cap_time', 
+time2 = 'bleeding_time')
+ #----------------------------------------------------#
+x = data.table(cap_time = c('2019-06-03 16:04:47' , '2019-04-05 16:40', '2019-04-05 01:55'),
+               bleeding_time = c('2019-06-03 16:00:54' , '2019-04-05 16:30', '2019-04-05 04:08'), rowid = 1:3)
+t = time_order_validator(x, time1 = 'cap_time', time2 = 'bleeding_time')
  #----------------------------------------------------#
 x = data.table(v1 = runif(5)  , v2 = runif(5) )
 v = data.table(variable = c('v1', 'v2'), lq = c(-1, 0.2), uq = c(.7, 0.5) )
