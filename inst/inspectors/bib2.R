@@ -20,8 +20,9 @@ inspector.ADULTS <- function(x) {
     measures      = measures[, .(lq = quantile(value, 0.005), uq = quantile(value, 0.995)), by = variable]
     Nchar         = data.table(variable = c('ID', 'UL', 'LL', 'UR', 'LR', 'transponder', 'age', 'sex'), n = c(7, 1, 1, 1, 1, 16, 1, 1) )
 
-    transponders  = bibq( "select * from COMMON.TRANSPONDERS_LIST")
-    preDefined1   = data.table( variable = 'transponder', set = c(list(transponders$transponder)))
+    transponders  = bibq( "select LEFT(transponder , 6) x  from COMMON.TRANSPONDERS_LIST")$x
+
+    preDefined1   = data.table( variable = 'transponder', set = c(list(transponders)))
     preDefined2   = data.table( variable = 'box',         set = c(list(1:277)))
 
     list(

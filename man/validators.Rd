@@ -22,26 +22,43 @@
 \usage{
 is.na_validator(x, reason = "mandatory")
 
-POSIXct_validator(x, ago = 7,
-  reason = "date-time wrong, in the future or older than a week")
+POSIXct_validator(
+  x,
+  ago = 7,
+  reason = "date-time wrong, in the future or older than a week"
+)
 
 hhmm_validator(x, reason = "invalid time")
 
 date_validator(x, reason = "invalid date - should be: yyyy-mm-dd")
 
-datetime_validator(x,
-  reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm")
+datetime_validator(
+  x,
+  reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm"
+)
 
-datetime_validatorSS(x,
-  reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm:ss")
+datetime_validatorSS(
+  x,
+  reason = "invalid datetime_ - should be: yyyy-mm-dd hh:mm:ss"
+)
 
-time_order_validator(x, time1, time2, units = "mins",
+time_order_validator(
+  x,
+  time1,
+  time2,
+  units = "mins",
   reason = "invalid time order or time difference larger than expected",
-  time_max = 60)
+  time_max = 60
+)
 
-datetime_order_validator(x, time1, time2, units = "days",
+datetime_order_validator(
+  x,
+  time1,
+  time2,
+  units = "days",
   reason = "invalid datetime order or datetime difference larger than expected",
-  time_max = 30)
+  time_max = 30
+)
 
 interval_validator(x, v, reason = "unusually small or large measure")
 
@@ -62,18 +79,6 @@ combo_validator(x, validSet, reason)
 
 \item{ago}{number of days indicating old data entry (set to a week)}
 
-\item{time1}{start time to compare}
-
-\item{time2}{end time to compare}
-
-\item{units}{character string of units in of the time_max}
-
-\item{time_max}{maximal time difference that is passing validation}
-
-\item{v}{a data.table containing the validation rules. See notes.}
-
-\item{validSet}{for combo_validator: a vector containing the possible colours}
-
 \item{time1}{start datetime to compare}
 
 \item{time2}{end datetime to compare}
@@ -81,6 +86,10 @@ combo_validator(x, validSet, reason)
 \item{units}{character string of units}
 
 \item{time_max}{maximal time difference that is passing validation}
+
+\item{v}{a data.table containing the validation rules. See notes.}
+
+\item{validSet}{for combo_validator: a vector containing the possible colours}
 }
 \value{
 \preformatted{   a data.table with two columns: variable (the names of the columns in x) 
