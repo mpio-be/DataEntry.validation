@@ -18,7 +18,8 @@ inspector.ADULTS <- function(x) {
     measures      = bibq( 'select tarsus, weight, P3 from BTatWESTERHOLZ.ADULTS')
     measures      = melt(measures)[!is.na(value)]
     measures      = measures[, .(lq = quantile(value, 0.005), uq = quantile(value, 0.995)), by = variable]
-    Nchar         = data.table(variable = c('ID', 'UL', 'LL', 'UR', 'LR', 'transponder', 'age', 'sex'), n = c(7, 1, 1, 1, 1, 16, 1, 1) )
+    Nchar         = data.table(variable = c('ID', 'UL', 'LL', 'UR', 'LR', 'transponder', 'age', 'sex'), 
+                                      n = c(   7, 1, 1, 1, 1, 6, 1, 1) )
 
     transponders  = bibq( "select LEFT(transponder , 6) x  from COMMON.TRANSPONDERS_LIST")$x
 
