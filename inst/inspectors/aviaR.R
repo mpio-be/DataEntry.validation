@@ -1,6 +1,6 @@
 #' ==========================================================================
 #' validators used by aviaR package. 
-#' require(wadeR)
+#' require(aviaR)
 #' require(glue)
 #' require(stringr)
 #' require(foreach)
