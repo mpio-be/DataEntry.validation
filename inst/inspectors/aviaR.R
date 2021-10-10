@@ -40,7 +40,7 @@ inspector.ADULTS <- function(x, ...){
 
       x[ , .(author)] %>%
     is.element_validator(v = data.table(variable = "author",
-    set = list(dbq(q = "SELECT initials ii FROM AUTHORS")$ii   )  ), db = 'RUFFatSEEWIESEN'),
+    set = list(dbq(q = "SELECT initials ii FROM RUFFatSEEWIESEN.AUTHORS")$ii   )  ) ),
 
 
 
