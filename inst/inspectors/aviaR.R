@@ -14,7 +14,7 @@
 #'
 #' o = foreach(i = 1:length(tabs), .combine = rbind) %do% {
 #'
-#'  x = sdb::dbq(q = glue('select * from {tabs[i]} ') )
+#'  x = sdb::dbq(q = glue('select * from RUFFatSEEWIESEN.{tabs[i]} ') )
 #'  class(x) = c(class(x), tabs[i] )
 #'
 #'  inspector_loader(package = 'aviaR')
@@ -43,7 +43,7 @@ inspector.ADULTS <- function(x, ...){
 
       x[ , .(author)] %>%
     is.element_validator(v = data.table(variable = "author",
-    set = list(dbq(q = "SELECT initials ii FROM AUTHORS")$ii   )  ), db = 'RUFFatSEEWIESEN'),
+    set = list(dbq(q = "SELECT initials ii FROM RUFFatSEEWIESEN.AUTHORS")$ii   )  ) ),
 
 
 
