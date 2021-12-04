@@ -82,21 +82,23 @@ inspector.default <- function (x) {
 
 
 #' @title   Inspector loader
-#' @description Load inspectors of a given package 
-#' @param   package a package name
+#' @description Loads inspectors from a file.
+#' @param path The path to the files containing the inspector functions. 
+#' @note This function is just sourcing the file but it does not return an error when something goes wrong.
 #' @export
 #' @examples
+#' p =system.file('inspectors', 'DataEntry.R', package = 'DataEntry.validation')
+#' inspector_loader(p)
 #' 
-#' inspector_loader(package = 'DataEntry')
-#' 
-inspector_loader <- function(package) {
+inspector_loader <- function(path) {
 
-  p = system.file('inspectors', paste0(package, '.R'), package = 'DataEntry.validation')
-  o = try(source(p, local = .GlobalEnv), silent = TRUE)
+
+  o = try(source(path, local = .GlobalEnv ), silent = TRUE)
 
   if(inherits(o, 'try-error')) {
 
-    warning('Could not source', p, 'in .GlobalEnv')
+    warning("Could not source", basename(path), "in .GlobalEnv")
   }
+ 
 
   }

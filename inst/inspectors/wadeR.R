@@ -1,3 +1,5 @@
+# TODO move to UI
+
 #' ==========================================================================
 #' validators used by wadeR package. 
 #' require(wadeR)
@@ -398,6 +400,3 @@ inspector.DEVICES <- function(x, ...){
 
 
   }
-
-
-

@@ -1,3 +1,6 @@
+
+# TODO move to UI
+
 #' ==========================================================================
 #' validators used by aviaR package.
 #' require(aviaR)

@@ -1,3 +1,5 @@
+# TODO move to UI
+
 #' ==========================================================================
 #' validators used by bib2 package. 
 #'
@@ -106,4 +108,3 @@ inspector.NESTS <- function(x) { list(
     data.table(variable = c('herbs', 'guessed') , x = 1) ) 
 
     )}
-

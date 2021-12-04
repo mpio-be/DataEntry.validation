@@ -1,5 +1,6 @@
 # ==========================================================================
 # validators used by DataEntry package for testing. 
+# see ./UI/newData/inspector.R
 # ==========================================================================
 
 inspector.data_entry <- function(x, ...) {list(
