@@ -17,6 +17,7 @@
 \alias{is.duplicate_validator}
 \alias{is.identical_validator}
 \alias{combo_validator}
+\alias{is.regular_sequence_validator}
 \title{\preformatted{    data validators
 }}
 \usage{
@@ -71,6 +72,8 @@ is.duplicate_validator(x, v, reason = "duplicate entry")
 is.identical_validator(x, v, reason = "invalid entry")
 
 combo_validator(x, validSet, reason)
+
+is.regular_sequence_validator(x, reason = "invalid regular sequence")
 }
 \arguments{
 \item{x}{a data.table whose entries needs to be validated.}
@@ -93,7 +96,7 @@ combo_validator(x, validSet, reason)
 }
 \value{
 \preformatted{   a data.table with two columns: variable (the names of the columns in x) 
-           and rowid (the position of offending (i.e. not validated) entries).
+           and rowid (the position of offending ,i.e. not validated, entries).
 }
 }
 \description{
@@ -113,6 +116,11 @@ all validators (except is.na_validator) ignore NA entries.
 }
 
 \preformatted{ `v`   for is.identical_validator: a data.table with variable and x (the value to test against)
+}
+
+\preformatted{ validates character vectors which can be transformed to sequences.
+       For now only vectors of form `x-y`, where `y > x` are validated.
+       Spaces are ignored.
 }
 }
 \examples{
@@ -182,11 +190,19 @@ is.duplicate_validator(x, v)
 x = data.table(v1 = 1:3  , v2 = c('a', 'b', 'c')  )
 v = data.table(variable = c('v1', 'v2'),  x = c(1, 'd'))
 is.identical_validator(x, v)
- #----------------------------------------------------#
-x = data.table(UL = c('M',    'M', ''),     
-              UR = c('Y',    'Y', ''),
-              LL = c('G,DB', 'G,P', ''),
-              LR = c('R',    'G', 'NOBA'),
-              recapture = c(1, 0, 1))
- combo_validator(x, validSet = 'M-G,DB|Y-R')              
+#----------------------------------------------------#
+x = data.table(
+  UL = c("M", "M", ""),
+  UR = c("Y", "Y", ""),
+  LL = c("G,DB", "G,P", ""),
+  LR = c("R", "G", "NOBA"),
+  recapture = c(1, 0, 1)
+)
+combo_validator(x, validSet = "M-G,DB|Y-R")
+#----------------------------------------------------#
+x <- data.table(
+   v1 = c("1-3", "10-20", "4 -6", "x", "\%"), 
+   v2 =  c("15-12", "30-20", NA, "1-", "-") )
+is.regular_sequence_validator(x)
+
 }
