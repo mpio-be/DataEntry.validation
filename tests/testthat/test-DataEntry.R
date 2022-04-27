@@ -76,6 +76,10 @@ context("Functions for validation")
         o =  combo_validator(x, validSet  = list("M-G,DB|Y-R") )
         expect_equal(nrow(o), 1)
 
+        # is.regexp_validator
+        x = data.table(id = c("x2-011-05-19", "x2-011-05-2019", "x2-011-5-2019", "x2-011-  5-2019") )
+        o = is.regexp_validator(x, regexp = "^x[1-9]-\\d{3}-\\b(?:05|09|11)\\b-19$")
+        expect_equal(nrow(o), 3)
 
         })
 
