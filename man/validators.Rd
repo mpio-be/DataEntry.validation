@@ -17,6 +17,7 @@
 \alias{is.duplicate_validator}
 \alias{is.identical_validator}
 \alias{combo_validator}
+\alias{is.regexp_validator}
 \title{\preformatted{    data validators
 }}
 \usage{
@@ -71,6 +72,8 @@ is.duplicate_validator(x, v, reason = "duplicate entry")
 is.identical_validator(x, v, reason = "invalid entry")
 
 combo_validator(x, validSet, reason)
+
+is.regexp_validator(x, regexp, reason = "invalid pattern")
 }
 \arguments{
 \item{x}{a data.table whose entries needs to be validated.}
@@ -90,6 +93,8 @@ combo_validator(x, validSet, reason)
 \item{v}{a data.table containing the validation rules. See notes.}
 
 \item{validSet}{for combo_validator: a vector containing the possible colours}
+
+\item{regexp}{for is.regexp_validator: a regexp expression}
 }
 \value{
 \preformatted{   a data.table with two columns: variable (the names of the columns in x) 
@@ -189,4 +194,7 @@ x = data.table(UL = c('M',    'M', ''),
               LR = c('R',    'G', 'NOBA'),
               recapture = c(1, 0, 1))
  combo_validator(x, validSet = 'M-G,DB|Y-R')              
+ #----------------------------------------------------#
+x = data.table(id = c("x2-011-05-19", "x2-011-05-2019", "x2-011-5-2019", "x2-011-  5-2019") )
+ is.regexp_validator(x, regexp = "^x[1-9]-\\\\d{3}-\\\\b(?:05|09|11)\\\\b-19$")
 }

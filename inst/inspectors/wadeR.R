@@ -24,7 +24,7 @@
 #'
 #' ==========================================================================
 
-
+# FIX move to corresponding interface
 
 inspector.CAPTURES <- function(x, ...){
   x[ , rowid := .I]
@@ -398,6 +398,3 @@ inspector.DEVICES <- function(x, ...){
 
 
   }
-
-
-
