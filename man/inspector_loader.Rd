@@ -4,16 +4,19 @@
 \alias{inspector_loader}
 \title{Inspector loader}
 \usage{
-inspector_loader(package)
+inspector_loader(path)
 }
 \arguments{
-\item{package}{a package name}
+\item{path}{The path to the files containing the inspector functions.}
 }
 \description{
-Load inspectors of a given package
+Loads inspectors from a file.
+}
+\note{
+This function is just sourcing the file but it does not return an error when something goes wrong.
 }
 \examples{
-
-inspector_loader(package = 'DataEntry')
+p <- system.file("inspectors", "DataEntry.R", package = "DataEntry.validation")
+inspector_loader(p)
 
 }

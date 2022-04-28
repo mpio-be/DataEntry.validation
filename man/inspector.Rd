@@ -16,21 +16,21 @@ Data police
 Inspectors are usually a collection of validators
 }
 \examples{
- require(data.table)
- require(magrittr)
- x = data.table(
-     v1        = c(NA, NA, as.character(Sys.time() - 3600*24*10 )  ) ,
-     datetime_ = c('2016-11-23 25:23', as.character(Sys.time() -100) ,as.character(Sys.time()+100))
-     )
- class(x) = c(class(x), 'tablex')
+require(data.table)
+require(magrittr)
+x <- data.table(
+  v1        = c(NA, NA, as.character(Sys.time() - 3600 * 24 * 10)),
+  datetime_ = c("2016-11-23 25:23", as.character(Sys.time() - 100), as.character(Sys.time() + 100))
+)
+class(x) <- c(class(x), "tablex")
 
- inspector.tablex <- function(x) {
+inspector.tablex <- function(x) {
   list(
-      x[, .(datetime_)]  \%>\% POSIXct_validator, 
-      x  \%>\% is.na_validator
-   )
-  }
+    x[, .(datetime_)] \%>\% POSIXct_validator(),
+    x \%>\% is.na_validator()
+  )
+}
 
- evalidators( inspector(x) )
+evalidators(inspector(x))
 
 }
