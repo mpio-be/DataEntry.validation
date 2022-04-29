@@ -334,40 +334,6 @@ is.identical_validator <- function(x, v, reason = 'invalid entry') {
 
 
 #' @rdname    validators
-#' @name      combo_validator 
-#' @param     validSet   for combo_validator: a vector containing the possible colours 
-#' @export
-#' @examples
-#'  #----------------------------------------------------#
-#'x = data.table(UL = c('M',    'M', ''),     
-#'               UR = c('Y',    'Y', ''),
-#'               LL = c('G,DB', 'G,P', ''),
-#'               LR = c('R',    'G', 'NOBA'),
-#'               recapture = c(1, 0, 1))
-#'  combo_validator(x, validSet = 'M-G,DB|Y-R')              
-
-combo_validator <- function(x, validSet, reason) {
-  # FIX
-  x[, rowid := .I ]
-  x[is.na(x)] = ''
-  o = x[, .(w = paste0(UL, '-', LL, '|', UR, '-',LR), recapture), by = rowid]
-
-  o[recapture == 1, v := !is.element(w, validSet ), by = rowid ]
-  o[recapture == 0, v := is.element(w, validSet ), by = rowid ]
-
-  o[w %in% c(NA, 'M-|Y-COBA', 'M-|W-COBA', '-|-COBA','-|-NOBA', '-|-NOBA1', '-|-NOBA2', '-|-NOBA3'), v := FALSE]
-  o = o[(v)]
-
-  o[recapture == 0, reason  := 'Color combo does already exist in CAPTURES! Recapture?']
-  o[recapture == 1, reason  := 'Color combo does not exist in CAPTURES! First capture?']
-
-  o[, variable  := 'color combo']
-
-  o[, .(rowid, variable, reason)]
-  }
-
-
-#' @rdname    validators
 #' @name      is.regexp_validator 
 #' @param     regexp   for is.regexp_validator: a regexp expression
 #' @export
