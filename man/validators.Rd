@@ -16,7 +16,6 @@
 \alias{is.element_validator}
 \alias{is.duplicate_validator}
 \alias{is.identical_validator}
-\alias{combo_validator}
 \alias{is.regexp_validator}
 \title{\preformatted{    data validators
 }}
@@ -71,8 +70,6 @@ is.duplicate_validator(x, v, reason = "duplicate entry")
 
 is.identical_validator(x, v, reason = "invalid entry")
 
-combo_validator(x, validSet, reason)
-
 is.regexp_validator(x, regexp, reason = "invalid pattern")
 }
 \arguments{
@@ -91,8 +88,6 @@ is.regexp_validator(x, regexp, reason = "invalid pattern")
 \item{time_max}{maximal time difference that is passing validation}
 
 \item{v}{a data.table containing the validation rules. See notes.}
-
-\item{validSet}{for combo_validator: a vector containing the possible colours}
 
 \item{regexp}{for is.regexp_validator: a regexp expression}
 }
@@ -187,13 +182,6 @@ is.duplicate_validator(x, v)
 x = data.table(v1 = 1:3  , v2 = c('a', 'b', 'c')  )
 v = data.table(variable = c('v1', 'v2'),  x = c(1, 'd'))
 is.identical_validator(x, v)
- #----------------------------------------------------#
-x = data.table(UL = c('M',    'M', ''),     
-              UR = c('Y',    'Y', ''),
-              LL = c('G,DB', 'G,P', ''),
-              LR = c('R',    'G', 'NOBA'),
-              recapture = c(1, 0, 1))
- combo_validator(x, validSet = 'M-G,DB|Y-R')              
  #----------------------------------------------------#
 x = data.table(id = c("x2-011-05-19", "x2-011-05-2019", "x2-011-5-2019", "x2-011-  5-2019") )
  is.regexp_validator(x, regexp = "^x[1-9]-\\\\d{3}-\\\\b(?:05|09|11)\\\\b-19$")
