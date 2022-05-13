@@ -13,24 +13,30 @@ inspector(x)
 Data police
 }
 \details{
-Inspectors are usually a collection of validators
+Inspectors are S3 functions that usually return the results of several validators
 }
 \examples{
 require(data.table)
-require(magrittr)
 x <- data.table(
   v1        = c(NA, NA, as.character(Sys.time() - 3600 * 24 * 10)),
   datetime_ = c("2016-11-23 25:23", as.character(Sys.time() - 100), as.character(Sys.time() + 100))
 )
+x[, rowid := .I]
 class(x) <- c(class(x), "tablex")
 
 inspector.tablex <- function(x) {
   list(
-    x[, .(datetime_)] \%>\% POSIXct_validator(),
-    x \%>\% is.na_validator()
+    # first validator
+    x[, .(datetime_)] |> POSIXct_validator()
+    ,
+    # second validator
+    is.na_validator(x)
+
   )
+
+
 }
 
-evalidators(inspector(x))
+inspector(x) |> evalidators()
 
 }

@@ -1,3 +1,46 @@
+
+#' Let a validator fail without an error
+#' @param  x an expression that should tipically return a validator result but in some, 
+#'           yet to be discovered, exceptional cases, it does not.
+#' @param nam an optional name to help identify the failty validator later.
+#' @export
+#' @examples 
+#' x = data.table(id = 1:10)
+#' wrong_output_validator <- nrow
+#' faulty_validator <- function(x) foo(x)
+#' 
+#' faulty_validator (x) |> try_validator(nam = 'foo')
+#' nrow(x) |> try_validator()
+#' 
+try_validator <- function(..., nam = "") {
+
+  ev = try(..., silent = TRUE)
+  
+  if (inherits(ev, "try-error")) {
+    o = data.frame(
+      rowid = NA, variable = NA,
+      reason = glue("Validator {nam} did not work: {ev}")
+    )
+  } else 
+  if (!all(c("rowid", "variable", "reason") %in% names(ev))) {
+
+    o <- data.frame(
+      rowid = NA, variable = NA,
+      reason = glue("Validator {nam} seem to work but it does not return the correct format. ") |> str_squish()
+    )
+
+  } else {
+     o = ev
+  }
+  
+ o
+
+
+}
+
+
+
+
 #' Evaluate Validators safely
 #' @param  L A list resulting from combining several validators
 #' @export
@@ -19,7 +62,7 @@ evalidators <- function(L) {
 
 #' Data police
 #'
-#' Inspectors are usually a collection of validators
+#' Inspectors are S3 functions that usually return the results of several validators
 #'
 #' @title   data inspector
 #' @param   x a data.table with its (S3) class extended by the database table name (see server.R)
@@ -27,21 +70,27 @@ evalidators <- function(L) {
 #'
 #' @examples
 #' require(data.table)
-#' require(magrittr)
 #' x <- data.table(
 #'   v1        = c(NA, NA, as.character(Sys.time() - 3600 * 24 * 10)),
 #'   datetime_ = c("2016-11-23 25:23", as.character(Sys.time() - 100), as.character(Sys.time() + 100))
 #' )
+#' x[, rowid := .I]
 #' class(x) <- c(class(x), "tablex")
 #'
 #' inspector.tablex <- function(x) {
 #'   list(
-#'     x[, .(datetime_)] %>% POSIXct_validator(),
-#'     x %>% is.na_validator()
+#'     # first validator
+#'     x[, .(datetime_)] |> POSIXct_validator()
+#'     ,
+#'     # second validator
+#'     is.na_validator(x)
+#' 
 #'   )
+#' 
+#' 
 #' }
 #'
-#' evalidators(inspector(x))
+#' inspector(x) |> evalidators()
 #'
 inspector <- function(x) {
   UseMethod("inspector", x)
