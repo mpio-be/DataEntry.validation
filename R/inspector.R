@@ -18,14 +18,14 @@ try_validator <- function(..., nam = "") {
   
   if (inherits(ev, "try-error")) {
     o = data.frame(
-      rowid = NA, variable = NA,
+      rowid = as.character(NA), variable = as.character(NA),
       reason = glue("Validator {nam} did not work: {ev}")
     )
   } else 
   if (!all(c("rowid", "variable", "reason") %in% names(ev))) {
 
     o <- data.frame(
-      rowid = NA, variable = NA,
+      rowid = as.character(NA), variable = as.character(NA),
       reason = glue("Validator {nam} seem to work but it does not return the correct format. ") |> str_squish()
     )
 
@@ -70,6 +70,7 @@ evalidators <- function(L) {
 #'
 #' @examples
 #' require(data.table)
+#' require(DataEntry.validation)
 #' x <- data.table(
 #'   v1        = c(NA, NA, as.character(Sys.time() - 3600 * 24 * 10)),
 #'   datetime_ = c("2016-11-23 25:23", as.character(Sys.time() - 100), as.character(Sys.time() + 100))
