@@ -17,6 +17,7 @@ Inspectors are S3 functions that usually return the results of several validator
 }
 \examples{
 require(data.table)
+require(DataEntry.validation)
 x <- data.table(
   v1        = c(NA, NA, as.character(Sys.time() - 3600 * 24 * 10)),
   datetime_ = c("2016-11-23 25:23", as.character(Sys.time() - 100), as.character(Sys.time() + 100))

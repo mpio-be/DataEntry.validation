@@ -19,14 +19,17 @@ try_validator <- function(..., nam = "") {
   if (inherits(ev, "try-error")) {
     o = data.frame(
       rowid = as.character(NA), variable = as.character(NA),
-      reason = glue("Validator {nam} did not work: {ev}")
+      reason = glue("Validator {nam} did not work: {ev}") |>
+               as.character()
     )
   } else 
   if (!all(c("rowid", "variable", "reason") %in% names(ev))) {
 
     o <- data.frame(
       rowid = as.character(NA), variable = as.character(NA),
-      reason = glue("Validator {nam} seem to work but it does not return the correct format. ") |> str_squish()
+      reason = glue("Validator {nam} seem to work but it does not return the correct format. ") |>
+        str_squish() |>
+        as.character()
     )
 
   } else {
