@@ -19,7 +19,7 @@ try_validator <- function(..., nam = "") {
   if (inherits(ev, "try-error")) {
     o = data.frame(
       rowid = as.character(NA), variable = as.character(NA),
-      reason = glue("Validator {nam} did not work: {str_trunc(ev, 30)}") |>
+      reason = glue("Validator {dQuote(nam)} returned an error: {str_trunc(ev, 30)}") |>
                as.character()
     )
   } else 
@@ -27,7 +27,7 @@ try_validator <- function(..., nam = "") {
 
     o <- data.frame(
       rowid = as.character(NA), variable = as.character(NA),
-      reason = glue("Validator {nam} seem to work but it does not return the correct format. ") |>
+      reason = glue("Validator {dQuote(nam)} seem to work but it does not return the correct format. ") |>
         str_squish() |>
         as.character()
     )
