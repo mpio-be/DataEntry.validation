@@ -19,7 +19,7 @@ try_validator <- function(..., nam = "") {
   if (inherits(ev, "try-error")) {
     o = data.frame(
       rowid = as.character(NA), variable = as.character(NA),
-      reason = glue("Validator {nam} did not work: {ev}") |>
+      reason = glue("Validator {nam} did not work: {str_trunc(ev, 30)}") |>
                as.character()
     )
   } else 
