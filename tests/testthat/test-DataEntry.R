@@ -70,11 +70,6 @@ context("Functions for validation")
         o = is.identical_validator(x, v)
         expect_equal(nrow(o), 5)
 
-        #combo_validator
-        x = data.table(UL = c('M', 'M')  , LL = c('G,DB', 'G,P'), 
-        UR = c('Y', 'Y'), LR = c('R', 'G'), recapture = 1 )
-        o =  combo_validator(x, validSet  = list("M-G,DB|Y-R") )
-        expect_equal(nrow(o), 1)
 
         # is.regexp_validator
         x = data.table(id = c("x2-011-05-19", "x2-011-05-2019", "x2-011-5-2019", "x2-011-  5-2019") )
