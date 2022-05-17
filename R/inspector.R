@@ -55,7 +55,7 @@ evalidators <- function(L) {
   } else {
     o <- data.frame(
       rowid = NA, variable = NA,
-      reason = "Validators are not working at the moment!"
+      reason = glue("Oops! validators need validation, Error: {dQuote( str_squish(o))}")
     )
   }
 
@@ -88,6 +88,9 @@ evalidators <- function(L) {
 #'     ,
 #'     # second validator
 #'     is.na_validator(x)
+#'     , 
+#'     # faulty validator
+#'     nrow(x) |> try_validator(nam = 'wrong output')
 #' 
 #'   )
 #' 
