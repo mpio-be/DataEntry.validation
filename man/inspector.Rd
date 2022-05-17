@@ -32,6 +32,9 @@ inspector.tablex <- function(x) {
     ,
     # second validator
     is.na_validator(x)
+    , 
+    # faulty validator
+    nrow(x) |> try_validator(nam = 'wrong output')
 
   )
 
