@@ -17,8 +17,8 @@
 \alias{is.duplicate_validator}
 \alias{is.identical_validator}
 \alias{is.regexp_validator}
-\title{\preformatted{    data validators
-}}
+\title{\if{html}{\out{<div class="sourceCode">}}\preformatted{    data validators
+}\if{html}{\out{</div>}}}
 \usage{
 is.na_validator(x, reason = "mandatory")
 
@@ -92,28 +92,28 @@ is.regexp_validator(x, regexp, reason = "invalid pattern")
 \item{regexp}{for is.regexp_validator: a regexp expression}
 }
 \value{
-\preformatted{   a data.table with two columns: variable (the names of the columns in x) 
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   a data.table with two columns: variable (the names of the columns in x) 
            and rowid (the position of offending (i.e. not validated) entries).
-}
+}\if{html}{\out{</div>}}
 }
 \description{
 all validators (except is.na_validator) ignore NA entries.
 }
 \note{
-\preformatted{`v` for interval_validator: a data.table with variable, lq, uq columns
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{`v` for interval_validator: a data.table with variable, lq, uq columns
+}\if{html}{\out{</div>}}
 
-\preformatted{`v`  for nchar_validator: a data.table with variable and n (number of characters)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{`v`  for nchar_validator: a data.table with variable and n (number of characters)
+}\if{html}{\out{</div>}}
 
-\preformatted{ `v`   for is.element_validator: a data.table with variable and set (a vector of lists containing the valid elements for each variable )
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ `v`   for is.element_validator: a data.table with variable and set (a vector of lists containing the valid elements for each variable )
+}\if{html}{\out{</div>}}
 
-\preformatted{ `v`  for is.duplicate_validator: a data.table with variable and set (a vector of lists containing the already existing values for each variable )
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ `v`  for is.duplicate_validator: a data.table with variable and set (a vector of lists containing the already existing values for each variable )
+}\if{html}{\out{</div>}}
 
-\preformatted{ `v`   for is.identical_validator: a data.table with variable and x (the value to test against)
-}
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ `v`   for is.identical_validator: a data.table with variable and x (the value to test against)
+}\if{html}{\out{</div>}}
 }
 \examples{
 #----------------------------------------------------#
