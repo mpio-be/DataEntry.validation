@@ -103,7 +103,7 @@ inspector <- function(x) {
   UseMethod("inspector", x)
 }
 
-
+#' @export
 inspector.default <- function(x) {
   data.frame(rowid = NA, variable = NA, reason = "Validators are not available for this table!")
 }

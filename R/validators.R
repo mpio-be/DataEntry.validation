@@ -163,9 +163,9 @@ time_order_validator <- function(x, time1, time2, units = 'mins',  reason = 'inv
 
   f = function(x) strptime(x, format = "%H:%M") %>% as.POSIXct
 
-  if( inherits(o$time1, 'character' ) )
+  if( !inherits(o$time1, 'POSIXt' ) )
     o[, dt1 := f(time1) ]
-  if( inherits(o$time2, 'character' ) )
+  if( !inherits(o$time2, 'POSIXt' ) )
     o[, dt2 := f(time2) ]
 
   o[, difft := difftime(dt2, dt1, units = units)]
